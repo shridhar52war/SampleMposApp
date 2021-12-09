@@ -136,6 +136,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -145,6 +146,12 @@ android {
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
+    compileOptions {
+        //coreLibraryDesugaringEnabled true
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -155,6 +162,8 @@ android {
     }
     buildTypes {
         debug {
+            debuggable true
+            minifyEnabled false
             signingConfig signingConfigs.debug
             if (nativeArchitectures) {
                 ndk {
@@ -189,8 +198,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     //noinspection GradleDynamicVersion
+    //coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
