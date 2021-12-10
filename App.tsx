@@ -21,7 +21,7 @@ import {
 } from 'react-native';
 import { init } from 'react-native-mpos-wrapper';
 
-import { Colors, Header } from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -36,12 +36,19 @@ const App = () => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
+        <Text
+          style={{
+            fontSize: 18,
+            padding: 16,
+          }}>
+          Sample React-Native MPOS Wrapper
+        </Text>
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <TouchableHighlight
+            style={{ padding: 28, backgroundColor: 'aqua', borderRadius: 12 }}
             onPress={async () => {
               //const result = await multiply(2, 3);
               try {
@@ -51,7 +58,7 @@ const App = () => {
                 console.log('Error', e);
               }
             }}>
-            <Text>Calculate</Text>
+            <Text>Click to Initialize MPOS SDK</Text>
           </TouchableHighlight>
         </View>
       </ScrollView>
