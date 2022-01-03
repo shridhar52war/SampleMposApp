@@ -5325,9 +5325,9 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
-"react-native-mpos-wrapper@https://github.com/shridhar52war/react-native-mpos-wrapper#64ad004":
+"react-native-mpos-wrapper@https://github.com/shridhar52war/react-native-mpos-wrapper#7970011":
   version "0.1.0"
-  resolved "https://github.com/shridhar52war/react-native-mpos-wrapper#64ad004e1979b198bc16460c8037466a25e0ec1e"
+  resolved "https://github.com/shridhar52war/react-native-mpos-wrapper#79700115663e31f505542d3fb14a91157a090d04"
 
 react-native@0.66.1:
   version "0.66.1"
