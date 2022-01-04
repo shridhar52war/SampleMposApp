@@ -28,6 +28,27 @@ import {
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
+const configObect = {
+  attestationHost: 'https://mpos-uat.fasspay.com:9001', //To set the attestation server’s URL. This field is mandatory if attestation is enabled.
+  attestationHostCertPinning:
+    'sha256/BJlJjxY7OHxhAz6yqy2gm58+qlP0AGwnBHDIG6zkhfU=', //  To set the attestation host’s certificate if SDK should verify with certificate pinning method.
+  attestationHostReadTimeout: 10000,
+  attestationRefreshInterval: 300000,
+  attestationConnectionTimeout: 30000,
+  /* To set the Google API Key for Google Safetynet Attestation purpose.
+  This field is mandatory. This requires developer to register an
+  account under Google Developer Console > Android Device
+  Verification API. For more information, please visit this link:
+  https://developer.android.com/training/safetynet/attestation.htm
+  l#obtain-api-key*/
+  googleApiKey: 'AIzaSyBEwbWEnuL12mp0C1zjj-W2tHm770uK82Q',
+
+  accessKey: 'kT/BjPDNDr0npGasHek0XIt2rVqfkCMx+n6ZHhoWJlYeAg==', //To set the Access Key. This field is mandatory. Soft Space will provide the Access Key.
+  secretKey: 'EPnYtWJwEZ2bphgBrKrJA0LDRS9ZcASsuwy7CQTJmOU=', //To set the Secret Key. This field is mandatory. Soft Space will provide the Secret Key.
+  uniqueId: 'rzp03', // To set the uniqueID provided by Soft Space.
+  developerId: '9nD9hrW8EMWB375', //To set the developerID provided by Soft Space.
+};
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -37,13 +58,13 @@ const App = () => {
 
   useEffect(() => {
     console.log('Registering the events...');
-    MposWrapperEmitter?.addListener('RefreshToken', data => {
+    MposWrapperEmitter?.addListener('REFRESH_TOKEN_ACTION', data => {
       console.log('refreshToken Listener:', JSON.stringify(data));
     });
-    MposWrapperEmitter?.addListener('TransactionResult', data => {
+    MposWrapperEmitter?.addListener('INITIALIZE_TRANSACTION_ACTION', data => {
       console.log('TransactionResult Listener:', JSON.stringify(data));
     });
-    MposWrapperEmitter?.addListener('TransactionUIEvent', data => {
+    MposWrapperEmitter?.addListener('VOID_TRANSACTION_ACTION', data => {
       console.log('TransactionUIEvent Listener:', JSON.stringify(data));
     });
   }, []);
@@ -69,7 +90,7 @@ const App = () => {
             style={{ padding: 28, backgroundColor: 'aqua', borderRadius: 12 }}
             onPress={async () => {
               try {
-                const u = await init();
+                const u = await init(configObect);
                 Alert.alert(`${u}`);
               } catch (e) {
                 console.log('Error', e);
@@ -85,11 +106,9 @@ const App = () => {
               backgroundColor: 'pink',
               borderRadius: 12,
             }}
-            onPress={async () => {
+            onPress={() => {
               try {
-                await refreshToken((d, a) => {
-                  console.log('refreshToken callback', d);
-                });
+                refreshToken();
                 //Alert.alert(`${u}`);
               } catch (e) {
                 console.log('Error', e);
@@ -106,11 +125,9 @@ const App = () => {
               backgroundColor: 'yellow',
               borderRadius: 12,
             }}
-            onPress={async () => {
+            onPress={() => {
               try {
-                await initializeTransaction((d, a) => {
-                  console.log('initializeTransaction callback', d);
-                });
+                initializeTransaction('100');
                 //Alert.alert(`${u}`);
               } catch (e) {
                 console.log('Error', e);
