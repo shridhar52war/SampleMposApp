@@ -42,9 +42,15 @@ public class MainApplication extends Application implements ReactApplication {
 
   @Override
   public void onCreate() {
-    super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
-    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+      try{
+          super.onCreate();
+          SoLoader.init(this, /* native exopackage */ false);
+          initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+      }catch (Exception e){
+          android.util.Log.e("SSPOGService------------------", "exception: "+e.getMessage(), e);
+          e.printStackTrace();
+      }
+
   }
 
   /**

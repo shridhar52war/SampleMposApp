@@ -7,26 +7,27 @@
  *
  * @format
  */
-
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   Text,
   useColorScheme,
   View,
   TouchableHighlight,
   Alert,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  TextInput,
 } from 'react-native';
 import {
   init,
   initializeTransaction,
   refreshToken,
   MposWrapperEmitter,
+  refundTransaction,
 } from 'react-native-mpos-wrapper';
 
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const configObect = {
   attestationHost: 'https://mpos-uat.fasspay.com:9001', //To set the attestation server’s URL. This field is mandatory if attestation is enabled.
@@ -51,6 +52,7 @@ const configObect = {
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [transactionID, setTransactionID] = useState('');
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -65,6 +67,9 @@ const App = () => {
       console.log('TransactionResult Listener:', JSON.stringify(data));
     });
     MposWrapperEmitter?.addListener('VOID_TRANSACTION_ACTION', data => {
+      console.log('TransactionUIEvent Listener:', JSON.stringify(data));
+    });
+    MposWrapperEmitter?.addListener('REFUND_TRANSACTION_ACTION', data => {
       console.log('TransactionUIEvent Listener:', JSON.stringify(data));
     });
   }, []);
@@ -87,7 +92,7 @@ const App = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <TouchableHighlight
-            style={{ padding: 28, backgroundColor: 'aqua', borderRadius: 12 }}
+            style={{padding: 28, backgroundColor: 'aqua', borderRadius: 12}}
             onPress={async () => {
               try {
                 const u = await init(configObect);
@@ -135,6 +140,32 @@ const App = () => {
               }
             }}>
             <Text>Transact Rs 100</Text>
+          </TouchableHighlight>
+
+          <TextInput
+            style={{borderRadius: 2, borderWidth: 0.5, marginTop: 24}}
+            placeholder="Enter the trasactionID here"
+            value={transactionID}
+            onChangeText={input => {
+              setTransactionID(input);
+            }}
+          />
+          <TouchableHighlight
+            style={{
+              padding: 28,
+              marginTop: 24,
+              backgroundColor: 'green',
+              borderRadius: 12,
+            }}
+            disabled={transactionID.length === 0}
+            onPress={() => {
+              refundTransaction(transactionID);
+            }}>
+            <Text>
+              {!transactionID
+                ? 'Enter the transaction ID in above TextInput'
+                : `Refund Transaction with TransactionID: ${transactionID}`}
+            </Text>
           </TouchableHighlight>
         </View>
       </ScrollView>
